@@ -21,7 +21,16 @@ interface Question {
   title: string
   picture: string|null
   type: QuestionType
+  options?: Map<string, Option>
+  answers: String[]|number[]
+  done?: boolean
+}
 
+interface Option {
+  id: number
+  name: string
+  order: number
+  picture: string|null
 }
 
 enum QuestionType {
@@ -70,4 +79,4 @@ export const quizzesApiSlice = createApi({
 
 export const { useGetGroupsQuery, useGetGroupQuery} = quizzesApiSlice
 
-export type { Quiz };
+export type { Quiz, Question };

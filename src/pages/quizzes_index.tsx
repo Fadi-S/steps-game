@@ -1,7 +1,7 @@
 import { useGetGroupsQuery } from "../features/quizzes/quizzesApiSlice"
 import { Link } from "react-router"
 import hatImage from "../images/hat.png";
-import Loading from "./loading"
+import Loading from "../components/loading"
 import santaImage from "../images/santa.png"
 
 export default function QuizzesIndex() {

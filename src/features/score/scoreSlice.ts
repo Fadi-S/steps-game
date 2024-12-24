@@ -25,6 +25,18 @@ export const scoreSlice = createAppSlice({
 
       state.girlStep += 1
     }),
+
+    decrementGirls: create.reducer(state => {
+      if(state.girlStep <= 0) return;
+
+      state.girlStep -= 1
+    }),
+
+    decrementBoys: create.reducer(state => {
+      if(state.boyStep <= 0) return;
+
+      state.boyStep -= 1
+    }),
   }),
   selectors: {
     selectBoyStep: counter => counter.boyStep,
@@ -32,6 +44,6 @@ export const scoreSlice = createAppSlice({
   },
 });
 
-export const {  incrementBoys, incrementGirls } = scoreSlice.actions
+export const {  incrementBoys, incrementGirls, decrementBoys, decrementGirls } = scoreSlice.actions
 
 export const { selectBoyStep, selectGirlStep } = scoreSlice.selectors
