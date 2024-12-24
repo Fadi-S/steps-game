@@ -1,17 +1,14 @@
 import { useGetGroupsQuery } from "../features/quizzes/quizzesApiSlice"
 import { Link } from "react-router"
 import hatImage from "../images/hat.png";
+import Loading from "./loading"
 
 export default function ShowQuiz() {
 
   const { data, isLoading } = useGetGroupsQuery(1)
 
   if (isLoading || data === undefined) {
-    return (
-      <div>
-
-      </div>
-    )
+    return <Loading/>
   }
 
   const groups = data.groups
