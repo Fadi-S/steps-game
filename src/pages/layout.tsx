@@ -20,10 +20,6 @@ export default function Layout() {
           <img src={treeImage} alt="Tree" />
         </div>
 
-        <div className="absolute right-20 bottom-20 z-0 bg-cover bg-center w-64 rotate-[-15deg] h-auto">
-          <img src={santaImage} alt="Santa" />
-        </div>
-
         <div className="max-w-3xl mx-auto h-full">
           <Outlet />
         </div>

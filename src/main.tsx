@@ -6,7 +6,7 @@ import "./index.css"
 import { BrowserRouter, Routes, Route } from "react-router";
 import Layout from "./pages/layout"
 import QuizzesIndex from "./pages/quizzes_index"
-import ShowQuiz from "./pages/quizzes_index"
+import ShowQuiz from "./pages/quizz"
 
 
 const container = document.getElementById("root")
@@ -21,7 +21,7 @@ if (container) {
           <Routes>
           <Route element={<Layout />}>
             <Route index element={<QuizzesIndex />} />
-            <Route path=":group" element={<ShowQuiz />} />
+            <Route path=":slug" element={<ShowQuiz />} />
           </Route>
           </Routes>
         </BrowserRouter>

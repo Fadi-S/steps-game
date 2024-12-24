@@ -2,8 +2,9 @@ import { useGetGroupsQuery } from "../features/quizzes/quizzesApiSlice"
 import { Link } from "react-router"
 import hatImage from "../images/hat.png";
 import Loading from "./loading"
+import santaImage from "../images/santa.png"
 
-export default function ShowQuiz() {
+export default function QuizzesIndex() {
 
   const { data, isLoading } = useGetGroupsQuery(1)
 
@@ -28,6 +29,10 @@ export default function ShowQuiz() {
             {group.name}
           </Link>
         ))}
+      </div>
+
+      <div className="absolute right-20 bottom-20 z-0 bg-cover bg-center w-64 rotate-[-15deg] h-auto">
+        <img src={santaImage} alt="Santa" />
       </div>
     </div>
   )

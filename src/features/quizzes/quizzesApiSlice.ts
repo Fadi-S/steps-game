@@ -32,6 +32,10 @@ interface GroupsApiResponse {
   groups: Group[]
 }
 
+interface GroupApiResponse {
+  group: Group
+}
+
 interface QuizApiResponse {
   quiz: Quiz
 }
@@ -55,7 +59,12 @@ export const quizzesApiSlice = createApi({
       query: () => `/groups`,
       providesTags: (result, error, id) => [{ type: "Quizzes", id }],
     }),
+
+    getGroup: build.query<GroupApiResponse, string>({
+      query: (slug) => `/groups/${slug}`,
+      providesTags: (result, error, id) => [{ type: "Quizzes", id }],
+    }),
   }),
 })
 
-export const { useGetGroupsQuery } = quizzesApiSlice
+export const { useGetGroupsQuery, useGetGroupQuery } = quizzesApiSlice
