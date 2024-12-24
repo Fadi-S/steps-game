@@ -11,8 +11,9 @@ interface Group {
 interface Quiz {
   id: number
   name: string
+  slug: string
   group: Group
-  questions: Question[]|null
+  questions: Question[]
 }
 
 interface Question {
@@ -61,10 +62,12 @@ export const quizzesApiSlice = createApi({
     }),
 
     getGroup: build.query<GroupApiResponse, string>({
-      query: (slug) => `/groups/${slug}`,
+      query: (slug) => `/groups/${slug}?withQuestions&withAnswers`,
       providesTags: (result, error, id) => [{ type: "Quizzes", id }],
     }),
   }),
 })
 
-export const { useGetGroupsQuery, useGetGroupQuery } = quizzesApiSlice
+export const { useGetGroupsQuery, useGetGroupQuery} = quizzesApiSlice
+
+export type { Quiz };

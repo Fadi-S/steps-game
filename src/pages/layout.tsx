@@ -16,7 +16,7 @@ export default function Layout() {
           `}
         </style>
 
-        <div className="absolute left-0 top-0 z-0 bg-cover bg-center w-64 rotate-[15deg] h-auto">
+        <div className="absolute left-0 top-0 z-0 bg-cover bg-center w-80 rotate-[15deg] h-auto">
           <img src={treeImage} alt="Tree" />
         </div>
 
