@@ -1,9 +1,13 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
 import { Provider } from "react-redux"
-import App from "./App"
 import { store } from "./app/store"
 import "./index.css"
+import { BrowserRouter, Routes, Route } from "react-router";
+import Layout from "./pages/layout"
+import QuizzesIndex from "./pages/quizzes_index"
+import ShowQuiz from "./pages/quizzes_index"
+
 
 const container = document.getElementById("root")
 
@@ -13,7 +17,14 @@ if (container) {
   root.render(
     <React.StrictMode>
       <Provider store={store}>
-        <App />
+        <BrowserRouter>
+          <Routes>
+          <Route element={<Layout />}>
+            <Route index element={<QuizzesIndex />} />
+            <Route path=":group" element={<ShowQuiz />} />
+          </Route>
+          </Routes>
+        </BrowserRouter>
       </Provider>
     </React.StrictMode>,
   )
