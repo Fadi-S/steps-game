@@ -1,18 +1,29 @@
-'use client'
-
-import { useState } from 'react'
-import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
-import { CheckIcon } from '@heroicons/react/24/outline'
+import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react"
+import { CheckIcon } from "@heroicons/react/24/outline"
+import { Option, QuestionType } from "../features/quizzes/quizzesApiSlice"
+import React, { useState } from "react"
 
 interface ModalProps {
-  isOpen: boolean;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  title: string;
+  options: Option[]|null;
+  type: QuestionType;
+  checkAnswer: (answer: string|number) => void;
 }
 
-export default function Modal({isOpen} : ModalProps) {
-  const [open, setOpen] = useState(isOpen);
+export default function QuestionModal({ open, setOpen, title, options, type, checkAnswer }: ModalProps) {
+
+  const [answer, setAnswer] = useState<string|number>("");
+
+  function submit(event : React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    checkAnswer(answer);
+    setAnswer("");
+  }
 
   return (
-    <Dialog open={open} onClose={setOpen} className="relative z-10">
+    <Dialog open={open} onClose={setOpen} className="relative z-30">
       <DialogBackdrop
         transition
         className="fixed inset-0 bg-gray-500/75 transition-opacity data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in"
@@ -30,33 +41,40 @@ export default function Modal({isOpen} : ModalProps) {
               </div>
               <div className="mt-3 text-center sm:mt-5">
                 <DialogTitle as="h3" className="text-base font-semibold text-gray-900">
-                  Payment successful
+                  {title}
                 </DialogTitle>
-                <div className="mt-2">
-                  <p className="text-sm text-gray-500">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit. Eius aliquam laudantium explicabo pariatur
-                    iste dolorem animi vitae error totam. At sapiente aliquam accusamus facere veritatis.
-                  </p>
-                </div>
               </div>
             </div>
-            <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 sm:col-start-2"
-              >
-                Deactivate
-              </button>
-              <button
-                type="button"
-                data-autofocus
-                onClick={() => setOpen(false)}
-                className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:col-start-1 sm:mt-0"
-              >
-                Cancel
-              </button>
-            </div>
+            {type === QuestionType.Choose && (
+              <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
+                {options?.map((option) => (
+                  <button key={option.id} type="button"
+                          onClick={() => checkAnswer(option.order)}
+                  >
+                    {option.name}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {type === QuestionType.Written && (
+              <div className="mt-5">
+                <form onSubmit={submit}>
+                  <input
+                    name="answer"
+                    type="text"
+                    placeholder="......"
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    className="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                  />
+                  <button type="submit" className="mt-2 bg-green-600 hover:bg-green-700 transition-colors text-white px-4 py-2 rounded-md text-base font-semibold">
+                    Submit
+                  </button>
+                </form>
+
+              </div>
+            )}
           </DialogPanel>
         </div>
       </div>

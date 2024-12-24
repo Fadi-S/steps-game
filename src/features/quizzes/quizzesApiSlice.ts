@@ -21,9 +21,8 @@ interface Question {
   title: string
   picture: string|null
   type: QuestionType
-  options?: Map<string, Option>
+  options: Option[]
   answers: String[]|number[]
-  done?: boolean
 }
 
 interface Option {
@@ -79,4 +78,6 @@ export const quizzesApiSlice = createApi({
 
 export const { useGetGroupsQuery, useGetGroupQuery} = quizzesApiSlice
 
-export type { Quiz, Question };
+export type { Quiz, Question, Option };
+
+export { QuestionType };
