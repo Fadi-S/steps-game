@@ -80,10 +80,16 @@ export default function ShowQuiz() {
     setOpen(true)
   }
 
-  function checkAnswer(answer: number | string): boolean {
-    setFinishedQuestions([...finishedQuestions, question!.id])
+  function ciEquals(a : any, b : any) {
+    return typeof a === 'string' && typeof b === 'string'
+      ? a.localeCompare(b, undefined, { sensitivity: 'accent' }) === 0
+      : a === b;
+  }
 
-    if (question!.answers.filter((currentAnswer) => currentAnswer === answer).length > 0) {
+  function checkAnswer(answer: number | string): boolean {
+    setFinishedQuestions([...finishedQuestions, question!.id]);
+
+    if (question!.answers.filter((currentAnswer) => ciEquals(currentAnswer, answer)).length > 0) {
       if (boysOrGirls) {
         dispatch(incrementBoys())
       } else {
@@ -124,7 +130,7 @@ export default function ShowQuiz() {
 
 
           <div
-            className={`absolute top-0 left-50 -mt-64 z-20 duration-300 transition-opacity ${stepGirls === 4 || stepBoys === 4 ? "opacity-100" : "opacity-0"}`}>
+            className={`absolute top-0 left-50 -mt-[300px] z-20 duration-300 transition-opacity ${stepGirls === 4 || stepBoys === 4 ? "opacity-100" : "opacity-0"}`}>
             <img src={confetti} alt="Confetti" className="w-80" />
           </div>
 
@@ -133,22 +139,20 @@ export default function ShowQuiz() {
                src={boy} />
 
           {!(stepBoys === 4 || stepGirls === 4) && (
-            <button className={`absolute bottom-0 left-0 z-30 ml-[130px] ${transformStepBoy[stepBoys]}
-           bg-green-500 hover:bg-green-700 mb-16 transition-colors rounded-md text-white px-2 py-3 flex items-center`}
+            <button className={`absolute bottom-0 left-0 z-30 ml-[135px] mb-[30px] ${transformStepBoy[stepBoys]}
+           bg-red-500 hover:bg-red-700 transition-all rounded-full text-white p-3 flex items-center`}
                     onClick={() => openQuestion(true)}>
 
-              <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
-              <span>Open</span>
+              <QuestionMarkCircleIcon className="w-6 h-6" />
             </button>
           )}
 
           {!(stepBoys === 4 || stepGirls === 4) && (
-            <button className={`absolute bottom-0 right-0 z-30 mr-[130px] ${transformStepGirl[stepGirls]}
-           bg-red-500 hover:bg-red-700 transition-colors rounded-md text-white px-2 py-3 flex items-center`}
+            <button className={`absolute bottom-0 right-0 z-30 mr-[135px] mb-[30px] ${transformStepGirl[stepGirls]}
+           bg-red-500 hover:bg-red-700 transition-all rounded-full text-white p-3 flex items-center`}
                     onClick={() => openQuestion(false)}>
 
-              <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
-              <span>Open</span>
+              <QuestionMarkCircleIcon className="w-6 h-6" />
             </button>
           )}
 

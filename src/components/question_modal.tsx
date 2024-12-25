@@ -93,20 +93,24 @@ export default function QuestionModal({ open, setOpen, question, checkAnswer }: 
 
             {question.type === QuestionType.Written && (
               <div className="mt-5">
-                <form onSubmit={submit}>
+                <form onSubmit={submit} className="flex items-center space-x-4">
                   <input
                     name="answer"
                     type="text"
                     placeholder="......"
                     value={answer}
                     onChange={(e) => setAnswer(e.target.value)}
+                    dir="auto"
                     className={
-                    "block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:outline-indigo-600 focus:-outline-offset-2 sm:text-sm/6 "
+                    "block w-full rounded-md px-3 py-1.5 text-base outline outline-1 -outline-offset-1  placeholder:text-gray-400 focus:outline focus:outline-2 focus:outline-indigo-600 focus:-outline-offset-2 sm:text-sm/6 "
+                      + (correct === null ? "text-gray-900 bg-white outline-gray-300" : !correct ? "text-red-600 outline-red-600 bg-red-100" : "text-green-600 outline-green-600 bg-green-100")
                   }
                   />
-                  <button type="submit"
-                          className="mt-2 bg-green-600 hover:bg-green-700 transition-colors text-white px-4 py-2 rounded-md text-base font-semibold">
-                    Submit
+                  <button
+                    disabled={correct !== null}
+                    type="submit"
+                    className="bg-green-600 disabled:bg-gray-500 hover:bg-green-700 transition-colors text-white p-2 rounded-full text-base font-semibold">
+                    <CheckIcon className="w-6 h-6" />
                   </button>
                 </form>
 
