@@ -1,5 +1,5 @@
 import type { Question, Quiz } from "../features/quizzes/quizzesApiSlice"
-import { QuestionType, useGetGroupQuery } from "../features/quizzes/quizzesApiSlice"
+import { useGetGroupQuery } from "../features/quizzes/quizzesApiSlice"
 import { useParams } from "react-router"
 import Loading from "../components/loading"
 import girl from "../images/girl.png"
@@ -17,80 +17,83 @@ import {
 } from "../features/score/scoreSlice"
 import { MinusIcon, PlusIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/solid"
 import { useState } from "react"
-import QuestionModal from "../components/modal"
+import QuestionModal from "../components/question_modal"
 
 export default function ShowQuiz() {
-  const params = useParams();
-  const slug = params.slug as string;
+  const params = useParams()
+  const slug = params.slug as string
 
-  const stepBoys = useAppSelector(selectBoyStep);
-  const stepGirls = useAppSelector(selectGirlStep);
-  const dispatch = useAppDispatch();
+  const stepBoys = useAppSelector(selectBoyStep)
+  const stepGirls = useAppSelector(selectGirlStep)
+  const dispatch = useAppDispatch()
 
-  const { data, isLoading } = useGetGroupQuery(slug);
+  const { data, isLoading } = useGetGroupQuery(slug)
 
-  const [question, setQuestion] = useState<Question|null>(null);
-  const [open, setOpen] = useState<boolean>(false);
-  const [boysOrGirls, setBoysOrGirls] = useState<boolean>(false);
-  const [finishedQuestions, setFinishedQuestions] = useState<number[]>([]);
+  const [question, setQuestion] = useState<Question | null>(null)
+  const [open, setOpen] = useState<boolean>(false)
+  const [boysOrGirls, setBoysOrGirls] = useState<boolean>(false)
+  const [finishedQuestions, setFinishedQuestions] = useState<number[]>([])
 
   if (isLoading || data === undefined) {
-    return <Loading/>
+    return <Loading />
   }
 
-  const group = data.group;
+  const group = data.group
 
   group.quizzes!.forEach((quiz) => {
     quiz.questions.map((question) => ({
       ...question,
-      done: false,
-    }));
-  });
+      done: false
+    }))
+  })
 
-  const quizzes = new Map<string, Quiz>();
+  const quizzes = new Map<string, Quiz>()
   group.quizzes!.forEach((quiz) => quizzes.set(quiz.slug, quiz))
 
-  const steps = ["step-1", "step-2", "step-3", "last-step"];
+  const steps = ["step-1", "step-2", "step-3", "last-step"]
 
   const transformStepBoy = [
     "translate-x-[-130px]",
     "translate-x-[-20px] translate-y-[-110px]",
     "translate-x-[90px] translate-y-[-220px]",
     "translate-x-[200px] translate-y-[-330px]",
-    "translate-x-[320px] translate-y-[-440px]",
-  ];
+    "translate-x-[320px] translate-y-[-440px]"
+  ]
 
   const transformStepGirl = [
     "translate-x-[130px]",
     "translate-x-[20px] translate-y-[-110px]",
     "translate-x-[-90px] translate-y-[-220px]",
     "translate-x-[-200px] translate-y-[-330px]",
-    "translate-x-[-320px] translate-y-[-440px]",
-  ];
+    "translate-x-[-320px] translate-y-[-440px]"
+  ]
 
   function openQuestion(boys: boolean) {
-    const key = boys ? steps[stepBoys] : steps[stepGirls];
-    const quiz = quizzes.get(key)!;
+    const key = boys ? steps[stepBoys] : steps[stepGirls]
+    const quiz = quizzes.get(key)!
 
-    const question = quiz.questions.filter((question) => !finishedQuestions.includes(question.id))[0] ?? null;
-    if (question === null) return;
+    const question = quiz.questions.filter((question) => !finishedQuestions.includes(question.id))[0] ?? null
+    if (question === null) return
 
-    setFinishedQuestions([...finishedQuestions, question.id]);
-    setQuestion(question);
-    setBoysOrGirls(boys);
-    setOpen(true);
+    setQuestion(question)
+    setBoysOrGirls(boys)
+    setOpen(true)
   }
 
-  function checkAnswer(answer: number|string) {
-    if (question!.answers.filter((currentAnswer) => currentAnswer === answer).length > 0) {
-      setOpen(false);
+  function checkAnswer(answer: number | string): boolean {
+    setFinishedQuestions([...finishedQuestions, question!.id])
 
+    if (question!.answers.filter((currentAnswer) => currentAnswer === answer).length > 0) {
       if (boysOrGirls) {
-        dispatch(incrementBoys());
+        dispatch(incrementBoys())
       } else {
-        dispatch(incrementGirls());
+        dispatch(incrementGirls())
       }
+
+      return true
     }
+
+    return false
   }
 
   return (
@@ -101,6 +104,7 @@ export default function ShowQuiz() {
         type={question?.type || 1}
         checkAnswer={checkAnswer}
         open={open} setOpen={setOpen}
+        answers={question?.answers}
       />
 
       <h1
@@ -123,7 +127,7 @@ export default function ShowQuiz() {
 
 
           <div
-            className={`absolute top-0 left-50 -mt-64 z-20 duration-300 transition-opacity ${stepGirls === 4 || stepBoys === 4 ? 'opacity-100' : 'opacity-0'}`}>
+            className={`absolute top-0 left-50 -mt-64 z-20 duration-300 transition-opacity ${stepGirls === 4 || stepBoys === 4 ? "opacity-100" : "opacity-0"}`}>
             <img src={confetti} alt="Confetti" className="w-80" />
           </div>
 
@@ -131,21 +135,25 @@ export default function ShowQuiz() {
                className={`absolute w-32 z-20 transition-transform duration-300 bottom-0 left-0 ${transformStepBoy[stepBoys]}`}
                src={boy} />
 
-          <button className={`absolute bottom-0 left-0 z-30 ml-[130px] ${transformStepBoy[stepBoys]}
+          {!(stepBoys === 4 || stepGirls === 4) && (
+            <button className={`absolute bottom-0 left-0 z-30 ml-[130px] ${transformStepBoy[stepBoys]}
+           bg-green-500 hover:bg-green-700 mb-16 transition-colors rounded-md text-white px-2 py-3 flex items-center`}
+                    onClick={() => openQuestion(true)}>
+
+              <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
+              <span>Open</span>
+            </button>
+          )}
+
+          {!(stepBoys === 4 || stepGirls === 4) && (
+            <button className={`absolute bottom-0 right-0 z-30 mr-[130px] ${transformStepGirl[stepGirls]}
            bg-red-500 hover:bg-red-700 transition-colors rounded-md text-white px-2 py-3 flex items-center`}
-                  onClick={() => openQuestion(true)}>
+                    onClick={() => openQuestion(false)}>
 
-            <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
-            <span>Open question</span>
-          </button>
-
-          <button className={`absolute bottom-0 right-0 z-30 mr-[130px] ${transformStepGirl[stepGirls]}
-           bg-red-500 hover:bg-red-700 transition-colors rounded-md text-white px-2 py-3 flex items-center`}
-                  onClick={() => openQuestion(false)}>
-
-            <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
-            <span>Open question</span>
-          </button>
+              <QuestionMarkCircleIcon className="w-6 h-6 mr-2" />
+              <span>Open</span>
+            </button>
+          )}
 
           <img alt="Pyramid" className="z-10" src={pyramid} />
 

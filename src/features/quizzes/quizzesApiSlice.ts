@@ -22,7 +22,7 @@ interface Question {
   picture: string|null
   type: QuestionType
   options: Option[]
-  answers: String[]|number[]
+  answers: string[]|number[]
 }
 
 interface Option {
