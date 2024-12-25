@@ -99,12 +99,9 @@ export default function ShowQuiz() {
   return (
     <div className="py-6 flex flex-col items-center justify-between h-full">
       <QuestionModal
-        title={question?.title || ""}
-        options={question?.options ? Array.from(question?.options.values()) : null}
-        type={question?.type || 1}
+        question={question}
         checkAnswer={checkAnswer}
         open={open} setOpen={setOpen}
-        answers={question?.answers}
       />
 
       <h1

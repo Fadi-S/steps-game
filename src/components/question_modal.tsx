@@ -1,23 +1,24 @@
 import { Dialog, DialogBackdrop, DialogPanel, DialogTitle } from "@headlessui/react"
 import { CheckIcon } from "@heroicons/react/24/outline"
-import { Option, QuestionType } from "../features/quizzes/quizzesApiSlice"
+import { Option, Question, QuestionType } from "../features/quizzes/quizzesApiSlice"
 import React, { useState } from "react"
 import { XMarkIcon } from "@heroicons/react/24/solid"
 
 interface ModalProps {
   open: boolean;
   setOpen: (open: boolean) => void;
-  title: string;
-  options: Option[]|null;
-  type: QuestionType;
+  question: Question|null;
   checkAnswer: (answer: string|number) => boolean;
-  answers: string[]|number[]|undefined;
 }
 
-export default function QuestionModal({ open, setOpen, title, options, type, checkAnswer, answers }: ModalProps) {
+export default function QuestionModal({ open, setOpen, question, checkAnswer }: ModalProps) {
 
   const [answer, setAnswer] = useState<string|number>("");
   const [correct, setCorrect] = useState<boolean|null>(null);
+
+  if(question === null) {
+    return <div></div>
+  }
 
   function submit(event : React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -62,18 +63,22 @@ export default function QuestionModal({ open, setOpen, title, options, type, che
             <div>
               <div className="mb-3 text-center">
                 <DialogTitle as="h3" className="text-3xl font-semibold text-gray-900">
-                  {title}
+                  <span>{question.title}</span>
+
+                  {question.picture && (
+                    <img src={question.picture} alt={question.title} className="h-64 mx-auto" />
+                  )}
                 </DialogTitle>
               </div>
             </div>
-            {type === QuestionType.Choose && (
+            {question.type === QuestionType.Choose && (
               <div className="mt-5 sm:mt-8 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-4">
-                {options?.map((option) => (
+                {question.options?.map((option) => (
                   <button
                     disabled={correct !== null}
                     className={
                       `px-2 py-3 ring ring-gray-600 rounded-lg transition-colors duration-400 `
-                      + (correct === null ? "bg-gray-50 hover:bg-gray-200" : ((answers as number[]).includes(option.order) ? "bg-green-600 text-white" : (answer === option.order ? "bg-red-600 text-white" : "")))
+                      + (correct === null ? "bg-gray-50 hover:bg-gray-200" : ((question.answers as number[]).includes(option.order) ? "bg-green-600 text-white" : (answer === option.order ? "bg-red-600 text-white" : "")))
                     } key={option.id} type="button"
                     onClick={() => select(option.order)}
                   >
@@ -86,7 +91,7 @@ export default function QuestionModal({ open, setOpen, title, options, type, che
               </div>
             )}
 
-            {type === QuestionType.Written && (
+            {question.type === QuestionType.Written && (
               <div className="mt-5">
                 <form onSubmit={submit}>
                   <input
@@ -107,7 +112,7 @@ export default function QuestionModal({ open, setOpen, title, options, type, che
 
                 {correct !== null && (
                   <div className="flex space-x-2 mt-5">
-                    {(answers as string[]).map((currentAnswer) => (
+                    {(question.answers as string[]).map((currentAnswer) => (
                       <div className={
                         "p-2 border border-green-600 rounded " +
                         (currentAnswer === answer ? "bg-green-600 text-white" : "text-green-600")
