@@ -50,22 +50,20 @@ export default function ShowQuiz() {
   const quizzes = new Map<string, Quiz>()
   group.quizzes!.forEach((quiz) => quizzes.set(quiz.slug, quiz))
 
-  const steps = ["step-1", "step-2", "step-3", "last-step"]
+  const steps = ["step-1", "step-2", "last-step"]
 
   const transformStepBoy = [
     "translate-x-[-130px]",
-    "translate-x-[-20px] translate-y-[-110px]",
-    "translate-x-[90px] translate-y-[-220px]",
-    "translate-x-[200px] translate-y-[-330px]",
-    "translate-x-[320px] translate-y-[-440px]"
+    "translate-x-[20px] translate-y-[-145px]",
+    "translate-x-[170px] translate-y-[-290px]",
+    "translate-x-[320px] translate-y-[-435px]",
   ]
 
   const transformStepGirl = [
     "translate-x-[130px]",
-    "translate-x-[20px] translate-y-[-110px]",
-    "translate-x-[-90px] translate-y-[-220px]",
-    "translate-x-[-200px] translate-y-[-330px]",
-    "translate-x-[-320px] translate-y-[-440px]"
+    "translate-x-[-20px] translate-y-[-145px]",
+    "translate-x-[-170px] translate-y-[-290px]",
+    "translate-x-[-320px] translate-y-[-435px]",
   ]
 
   function openQuestion(boys: boolean) {
@@ -130,7 +128,7 @@ export default function ShowQuiz() {
 
 
           <div
-            className={`absolute top-0 left-50 -mt-[300px] z-20 duration-300 transition-opacity ${stepGirls === 4 || stepBoys === 4 ? "opacity-100" : "opacity-0"}`}>
+            className={`absolute top-0 left-50 -mt-[300px] z-20 duration-300 transition-opacity ${stepGirls === 3 || stepBoys === 3 ? "opacity-100" : "opacity-0"}`}>
             <img src={confetti} alt="Confetti" className="w-80" />
           </div>
 
@@ -138,7 +136,7 @@ export default function ShowQuiz() {
                className={`absolute w-32 z-20 transition-transform duration-300 bottom-0 left-0 ${transformStepBoy[stepBoys]}`}
                src={boy} />
 
-          {!(stepBoys === 4 || stepGirls === 4) && (
+          {!(stepBoys === 3 || stepGirls === 3) && (
             <button className={`absolute bottom-0 left-0 z-30 ml-[135px] mb-[30px] ${transformStepBoy[stepBoys]}
            bg-red-500 hover:bg-red-700 transition-all rounded-full text-white p-3 flex items-center`}
                     onClick={() => openQuestion(true)}>
@@ -147,7 +145,7 @@ export default function ShowQuiz() {
             </button>
           )}
 
-          {!(stepBoys === 4 || stepGirls === 4) && (
+          {!(stepBoys === 3 || stepGirls === 3) && (
             <button className={`absolute bottom-0 right-0 z-30 mr-[135px] mb-[30px] ${transformStepGirl[stepGirls]}
            bg-red-500 hover:bg-red-700 transition-all rounded-full text-white p-3 flex items-center`}
                     onClick={() => openQuestion(false)}>

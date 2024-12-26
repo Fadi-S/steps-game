@@ -15,13 +15,13 @@ export const scoreSlice = createAppSlice({
   initialState,
   reducers: create => ({
     incrementBoys: create.reducer(state => {
-      if(state.boyStep >= 4 || state.girlStep === 4) return;
+      if(state.boyStep >= 3 || state.girlStep === 3) return;
 
       state.boyStep += 1
     }),
 
     incrementGirls: create.reducer(state => {
-      if(state.girlStep >= 4 || state.boyStep === 4) return;
+      if(state.girlStep >= 3 || state.boyStep === 3) return;
 
       state.girlStep += 1
     }),
