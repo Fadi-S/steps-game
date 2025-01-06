@@ -5,6 +5,7 @@ import type { Question } from "../features/quizzes/quizzesApiSlice"
 import { useState } from "react"
 import type React from "react"
 import { XMarkIcon } from "@heroicons/react/24/solid"
+import confettiPop from "../images/confetti_pop.gif"
 
 interface ModalProps {
   open: boolean;
@@ -49,7 +50,7 @@ export default function QuestionModal({ open, setOpen, question, checkAnswer }: 
         <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
           <DialogPanel
             transition
-            className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 sm:p-6 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-2xl data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
+            className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 sm:p-6 text-left shadow-xl transition-all data-[closed]:translate-y-4 data-[closed]:opacity-0 data-[enter]:duration-300 data-[leave]:duration-200 data-[enter]:ease-out data-[leave]:ease-in sm:my-8 sm:w-full sm:max-w-4xl data-[closed]:sm:translate-y-0 data-[closed]:sm:scale-95"
           >
             <div className="absolute right-0 top-0 hidden pr-4 pt-4 sm:block">
               <button
@@ -63,8 +64,12 @@ export default function QuestionModal({ open, setOpen, question, checkAnswer }: 
             </div>
 
             <div>
-              <div className="mb-3 text-center">
-                <DialogTitle as="h3" className="text-3xl font-semibold text-gray-900">
+              <div className="mb-3 mt-4 text-center">
+                <DialogTitle as="h3" className="text-4xl font-semibold text-gray-900">
+                  {correct === true && (
+                    <img className="absolute" src={confettiPop} />
+                  )}
+
                   <span>{question.title}</span>
 
                   {question.picture && (
@@ -74,12 +79,12 @@ export default function QuestionModal({ open, setOpen, question, checkAnswer }: 
               </div>
             </div>
             {question.type === QuestionType.Choose && (
-              <div className="mt-5 sm:mt-8 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-4">
+              <div className="mt-5 sm:mt-8 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-8">
                 {question.options?.map((option) => (
                   <button
                     disabled={correct !== null}
                     className={
-                      `px-2 py-3 ring ring-gray-600 rounded-lg transition-colors duration-400 `
+                      `px-2 py-5 ring ring-gray-600 text-2xl rounded-lg transition-colors duration-400 `
                       + (correct === null ? "bg-gray-50 hover:bg-gray-200" : ((question.answers as number[]).includes(option.order) ? "bg-green-600 text-white" : (answer === option.order ? "bg-red-600 text-white" : "")))
                     } key={option.id} type="button"
                     onClick={() => select(option.order)}
